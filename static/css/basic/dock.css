@@ -1,0 +1,64 @@
+/* #20AA76  #20AA76 #0C4B33 #0C3C26; */
+#dock_main {
+//	position:absolute;
+    position:fixed;
+	margin:0;
+	padding:0;
+	width:100%;
+	height:70px;
+	background:#0C4B33;
+}
+
+#dock_bar {
+	width:90%;
+	height:100%;
+	margin:0 auto;
+	padding:0;
+	background:#0C4B33;
+}
+
+#dock_logo {
+	float:left;
+	color:white;
+	font-size:30px;
+	font-weight:600;
+	text-align:center;
+	line-height:70px;
+}
+#dock_msg {
+	float:left;
+	font-size:12px;
+	margin:17px 0 0 17px;
+	color:#20AA76;
+}
+
+#dock_menu {
+	float:right;
+	height:100%;
+}
+.dock_btn_plus {
+	width:100px;
+	float:left;
+	margin:0;
+	background:none;
+}
+.dock_btn, .manage_plus {
+	float:left;
+	width:100px;
+	height:70px;
+	border:0;
+	padding:0;
+	margin:0 15px 0 0;
+	background:#0C4B33;
+	color:white;
+	font-size:15px;
+}
+.manage_plus {
+	background:#20AA76;
+	border-top:3px solid white;
+	display:none;
+	height:40px;
+}
+
+
+// phone only

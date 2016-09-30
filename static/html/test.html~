@@ -1,0 +1,7 @@
+<html>
+	<form action="/index.php/test" method="post" enctype="multipart/form-data">
+		<input type="file" name="files[]" />
+		<input type="file" name="files[]" />
+		<input type="submit" />
+	</form>
+</html>

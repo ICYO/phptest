@@ -1,0 +1,38 @@
+body {
+	width:100%;
+	margin:0;
+	padding:0;
+	float:left;
+}
+
+#login_form {
+	margin:50px auto 0 auto;
+	width:250px;
+}
+
+.login_input {
+	height:22px;
+	width:100%;
+	float:left;
+	margin:10px 0 0 0;
+	padding:0;
+}
+#captcha {
+	width:100px;
+	margin-right:15px;
+}
+#cap_img {
+	float:left;
+	margin:10px 0 0 0;
+}
+#error {
+	float:left;
+	width:100%;
+	height:20px;
+	font-size:14px;
+	padding:0;
+	margin:0;
+	background:#6495ED;
+	text-align:center;
+	color:white;
+}

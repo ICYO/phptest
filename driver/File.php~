@@ -1,0 +1,117 @@
+<?php
+class File
+{
+	private $obj = null; // FILE object.
+	public $max_size = 0;
+	public $file = array(); // index of effective files.
+	public $file_num;
+	public $file_hash = array();
+	public $file_mime = null;
+	public $file_name = array();
+	public $file_tmp = null;
+	public $save_path = './';
+	public $notice = array(
+		'repeat' => [],
+		'type_error' => [],
+		'post_null' => false,
+		'date' => ''
+		);
+
+	const TEXT = ['text/txt',
+				  'text/plain',
+				  'text/html',
+				  'application/pdf',
+				  'application/msword',
+		];
+	const IMAGE = ['image/png',
+				   'image/x-png',
+				   'image/jpeg',
+				   'image/jpg',
+				   'image/gif',
+				   'image/bmp',
+				   'image/x-icon',
+				   'image/icon'
+		];
+
+	public function __construct(string $filename)
+	{
+		$this->notice['date'] = time();
+		$this->db = new mysqlIO();
+		
+		$this->obj = &$_FILES[$filename];
+//	Multi file:
+	    if (is_array($_FILES[$filename]['tmp_name'])) {
+
+		    foreach($_FILES[$filename]['tmp_name'] as $key => $val)
+			    if ($val != null) {
+					$this->file[] = $key; // save effective files.
+					$this->file_num++;
+				}
+			if ($this->file_num == 0) {
+				$this->notice['post_null'] = true;
+				return false;
+			}
+		}
+//   Single file:
+		else {
+			if ($_FILES[$filename]['tmp_name'] != null) {
+				$this->file[] = $_FILES[$filename]['tmp_name'];
+				$this->file_num++;
+			}
+			else
+				return false;
+		}
+		$this->hash_file_array();
+	}
+
+	public function type_mach(array $mime)
+	{
+		foreach ($this->file as $key)
+			if (! in_array($this->obj['type'][$key], $mime) or
+				! $this->file_num) {
+				$this->notice['type_error'][$key] = $this->obj['type'][$key];
+			    return false;
+			}
+		return true;
+	}
+
+	public function save($table)
+	{
+		foreach ($this->file_hash as $key => $once) {
+			$sql = "select 1 from $table where md5 = '{$once}'";
+			$test = $this->db->idb->query($sql);
+			
+			if ($test->num_rows == 0) {
+				$path = $this->make_file_path($this->obj['name'][$key]);
+				$data = [
+					'uid' => $_SESSION['id'],
+					'md5' => $once,
+					'src' => $path
+					];
+				if (! $this->db->insert($table, $data))
+					die(__CLASS__." insert error in " . __FILE__ . 'line'.__LINE__);
+
+				$tmp_file = $this->obj['tmp_name'][$key];
+				move_uploaded_file($tmp_file, $path);
+			} // end if;
+			else {
+				$this->notice['repeat'][$key] = [$this->obj['name'][$key]];
+			}
+		}
+	}
+
+	private function make_file_path($name)
+	{
+		$swap = time();
+		return "{$this->save_path}{$swap}{$name}";
+	}
+
+	private function hash_file_array()
+	{
+	    foreach ($this->file as $key) {
+			$md5 = md5_file($this->obj['tmp_name'][$key]);
+			$this->file_hash[$key] = $md5;
+		}
+	}
+
+}
